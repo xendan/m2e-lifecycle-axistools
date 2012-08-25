@@ -32,7 +32,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 public class AxistoolsCodeGenBuildParticipant extends
 		MojoExecutionBuildParticipant {
 	private static final long URL_RELOAD_TIMEOUT = 24 * 60 * 60 * 1000;
-	
+
 	private long lastWsdlReloadTime = System.currentTimeMillis();
 
 	/**
@@ -57,7 +57,7 @@ public class AxistoolsCodeGenBuildParticipant extends
 		IMaven maven = MavenPlugin.getMaven();
 		BuildContext buildContext = getBuildContext();
 
-		if (skipRebuild(kind, maven, buildContext)) {
+		if (skipRebuild(maven, buildContext)) {
 			return null;
 		}
 		// execute mojo
@@ -75,13 +75,16 @@ public class AxistoolsCodeGenBuildParticipant extends
 		return result;
 	}
 
-	private boolean skipRebuild(int kind, IMaven maven,
-			BuildContext buildContext) throws CoreException {
+	private boolean skipRebuild(IMaven maven, BuildContext buildContext)
+			throws CoreException {
+		if (fileModified(buildContext, new File("pom.xml"))) {
+			return false;
+		}
 		String wsdlFileName = maven.getMojoParameterValue(getSession(),
 				getMojoExecution(), "wsdlFile", String.class);
-		
+
 		File wsdlFile = new File(wsdlFileName);
-		
+
 		// is url
 		if (!wsdlFile.exists() && wsdlFileName.startsWith("http")) {
 			long now = System.currentTimeMillis();
@@ -92,17 +95,16 @@ public class AxistoolsCodeGenBuildParticipant extends
 			}
 			return true;
 		}
-		return !filesModified(buildContext, wsdlFile);
+		return !fileModified(buildContext, wsdlFile);
 	}
 
-	private boolean filesModified(BuildContext buildContext, File source) {
+	private boolean fileModified(BuildContext buildContext, File source) {
 		if (buildContext == null || source == null || !source.exists()) {
 			return false;
 		}
-
 		Scanner ds = buildContext.newScanner(source);
 		ds.scan();
 		String[] included = ds.getIncludedFiles();
-		return included != null && included.length > 0 ;
+		return included != null && included.length > 0;
 	}
 }
