@@ -51,7 +51,8 @@ public class AxistoolsCodeGenProjectConfigurator extends
     @Override
     protected File[] getSourceFolders(ProjectConfigurationRequest request,
             MojoExecution mojoExecution) throws CoreException {
-        return getParameterValue("outputDirectory", File[].class,
+        File[] dirs = getParameterValue("outputDirectory", File[].class,
                 request.getMavenSession(), mojoExecution);
+        return AxistoolsResolveOutputUtil.getOutputFolders(dirs, mojoExecution);
     }
 }

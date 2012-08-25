@@ -55,8 +55,9 @@ public class AxistoolsCodeGenBuildParticipant extends
         Set<IProject> result = super.build(kind, monitor);
 
         // tell m2e builder to refresh generated files
-        File generated = maven.getMojoParameterValue(getSession(),
+        File outputDir = maven.getMojoParameterValue(getSession(),
                 getMojoExecution(), "outputDirectory", File.class);
+        File generated = AxistoolsResolveOutputUtil.getOutputFolder(outputDir, getMojoExecution());
         if (null != generated) {
             buildContext.refresh(generated);
         }
