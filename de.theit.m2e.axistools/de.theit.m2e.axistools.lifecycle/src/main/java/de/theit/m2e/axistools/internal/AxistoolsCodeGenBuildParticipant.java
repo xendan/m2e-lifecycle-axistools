@@ -33,7 +33,7 @@ public class AxistoolsCodeGenBuildParticipant extends
 		MojoExecutionBuildParticipant {
 	private static final long URL_RELOAD_TIMEOUT = 24 * 60 * 60 * 1000;
 	
-	private long lastWsdlReloadTime;
+	private long lastWsdlReloadTime = System.currentTimeMillis();
 
 	/**
 	 * Creates a new instance of this class.
