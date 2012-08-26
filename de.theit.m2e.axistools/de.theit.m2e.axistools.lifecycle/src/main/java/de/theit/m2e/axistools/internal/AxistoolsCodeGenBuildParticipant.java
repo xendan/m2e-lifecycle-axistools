@@ -77,7 +77,8 @@ public class AxistoolsCodeGenBuildParticipant extends
 
 	private boolean skipRebuild(IMaven maven, BuildContext buildContext)
 			throws CoreException {
-		if (fileModified(buildContext, new File("pom.xml"))) {
+	    boolean notAxis2 = !AxistoolsResolveOutputUtil.isAxis2(getMojoExecution());
+		if (notAxis2 || fileModified(buildContext, new File("pom.xml"))) {
 			return false;
 		}
 		String wsdlFileName = maven.getMojoParameterValue(getSession(),

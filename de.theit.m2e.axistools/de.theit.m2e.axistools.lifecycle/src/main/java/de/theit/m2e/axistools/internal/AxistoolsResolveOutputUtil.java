@@ -32,7 +32,12 @@ public class AxistoolsResolveOutputUtil {
         return dirs;
     }
 
-    private static boolean isAxis2(MojoExecution mojoExecution) {
+    /**
+     * Is build for axis2 plugin.
+     * @param mojoExecution - maven plugin
+     * @return true if executin is for axis2 plugin
+     */
+    public static boolean isAxis2(MojoExecution mojoExecution) {
         return AXIS2.equals(mojoExecution.getArtifactId());
     }
 
